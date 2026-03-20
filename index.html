@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -866,6 +867,15 @@
 <div class="toast" id="toast">Order received — we'll be in touch shortly.</div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('orderBtn');
+    if (btn) {
+      btn.addEventListener('click', function() {
+        openModal('Sweater Box — Grade A/B x10', '£40', '10 branded sweaters · £3.00 per item');
+      });
+    }
+  });
+
   function openModal(name, price, desc) {
     document.getElementById('modalBundleName').textContent = name;
     document.getElementById('modalPrice').textContent = price;
