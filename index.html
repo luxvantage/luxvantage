@@ -515,7 +515,7 @@
     <span class="eyebrow-text">Pre-Loved. Curated. Yours.</span>
   </div>
   <h1>Second-hand,<br><em>first-class</em><br>finds.</h1>
-  <p class="hero-desc">Hand-picked Grade A–B branded streetwear bundles, sourced for resellers. Quality checked, ready to ship. Build your stock, scale your profit.</p>
+  <p class="hero-desc">Hand-picked Grade A–B bundles of all types, sourced for resellers. Quality checked, ready to ship. Build your stock, scale your profit.</p>
   <div class="hero-actions">
     <a href="#bundles" class="btn-primary">Browse Bundles</a>
     <a href="#how" class="btn-ghost">How It Works <span class="arrow">→</span></a>
@@ -627,7 +627,7 @@
     <div class="trust-card">
       <div class="trust-icon">◇</div>
       <div class="trust-title">Reseller Ready</div>
-      <div class="trust-desc">Items are photographed, tagged and ready to list. Save hours of prep time and start flipping the same day your bundle arrives.</div>
+      <div class="trust-desc">All you need to do is wait for your items to arrive, take photos of them, and list them. It's that simple — no sourcing, no sorting, just sell.</div>
     </div>
     <div class="trust-card">
       <div class="trust-icon">○</div>
@@ -694,7 +694,17 @@
   <div style="max-width:600px;">
     <h2 class="section-title" style="margin-bottom:16px;">Received your<br><em>bundle?</em></h2>
     <p style="font-size:0.85rem;font-weight:300;line-height:1.9;color:var(--muted);margin-bottom:40px;">We'd love to hear what you think. Leave a review below and help other resellers make their first move.</p>
-    <div id="reviewFormWrap">
+    <!-- STEP 1: Enter purchase code -->
+    <div id="codeGate" style="margin-bottom:32px;">
+      <p style="font-size:0.82rem;font-weight:300;line-height:1.8;color:var(--muted);margin-bottom:20px;">To leave a review you need your <strong style="color:var(--gold);">purchase code</strong> — this was included in your Stripe order confirmation email from Luxvantage.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <input type="text" id="purchaseCode" placeholder="Enter your purchase code e.g. LUX-2024" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--white);padding:14px 16px;font-family:'Montserrat',sans-serif;font-size:0.8rem;font-weight:300;outline:none;min-width:200px;"/>
+        <button onclick="verifyCode()" style="background:var(--gold);color:var(--bg);border:none;cursor:pointer;padding:14px 28px;font-family:'Montserrat',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;">Verify →</button>
+      </div>
+      <div id="codeError" style="display:none;color:#c0392b;font-size:0.75rem;margin-top:10px;letter-spacing:0.05em;">Invalid code. Please check your order confirmation email.</div>
+    </div>
+
+    <div id="reviewFormWrap" style="display:none;">
       <div style="margin-bottom:16px;">
         <input type="text" id="reviewName" placeholder="Your name" style="width:100%;background:var(--bg);border:1px solid var(--border-subtle);color:var(--white);padding:14px 16px;font-family:'Montserrat',sans-serif;font-size:0.8rem;font-weight:300;outline:none;margin-bottom:12px;transition:border-color 0.2s;"/>
         <input type="text" id="reviewLocation" placeholder="Your city (e.g. Manchester)" style="width:100%;background:var(--bg);border:1px solid var(--border-subtle);color:var(--white);padding:14px 16px;font-family:'Montserrat',sans-serif;font-size:0.8rem;font-weight:300;outline:none;margin-bottom:12px;transition:border-color 0.2s;"/>
@@ -791,6 +801,37 @@
       if (match) anyVisible = true;
     });
     document.getElementById('searchNoResults').style.display = anyVisible ? 'none' : 'block';
+  }
+
+
+  // Purchase codes - add a new one for each order you send out
+  const validCodes = [
+    'LUX-0001', 'LUX-0002', 'LUX-0003', 'LUX-0004', 'LUX-0005',
+    'LUX-0006', 'LUX-0007', 'LUX-0008', 'LUX-0009', 'LUX-0010',
+    'LUX-0011', 'LUX-0012', 'LUX-0013', 'LUX-0014', 'LUX-0015',
+    'LUX-0016', 'LUX-0017', 'LUX-0018', 'LUX-0019', 'LUX-0020',
+  ];
+  const usedCodes = JSON.parse(localStorage.getItem('lv_used_codes') || '[]');
+
+  function verifyCode() {
+    const code = document.getElementById('purchaseCode').value.trim().toUpperCase();
+    const errorEl = document.getElementById('codeError');
+    if (usedCodes.includes(code)) {
+      errorEl.textContent = 'This code has already been used to leave a review.';
+      errorEl.style.display = 'block';
+      return;
+    }
+    if (validCodes.includes(code)) {
+      document.getElementById('codeGate').style.display = 'none';
+      document.getElementById('reviewFormWrap').style.display = 'block';
+      errorEl.style.display = 'none';
+      // Mark code as used
+      usedCodes.push(code);
+      localStorage.setItem('lv_used_codes', JSON.stringify(usedCodes));
+    } else {
+      errorEl.textContent = 'Invalid code. Please check your order confirmation email.';
+      errorEl.style.display = 'block';
+    }
   }
 
   // Star picker
